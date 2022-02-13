@@ -125,5 +125,5 @@ def stream():
 
     source.data = data
 
-io.curdoc().add_periodic_callback(stream, 10)
+io.curdoc().add_periodic_callback(stream, 100)
 io.curdoc().title = "Vicsek model simulator"

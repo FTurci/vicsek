@@ -4,6 +4,7 @@ from scipy import sparse
 from scipy.spatial import cKDTree
 from bokeh import models, plotting, io
 from bokeh.models import LinearColorMapper
+
 color_mapper = LinearColorMapper(palette="Turbo256", low=-np.pi, high=np.pi)
 #
 L = 32.0

@@ -26,14 +26,13 @@ v0 = r0/deltat*factor
 N = int(rho_init*L**2)
 pos = np.random.uniform(0,L,size=(N,2))
 orient = np.random.uniform(-np.pi, np.pi,size=N)
-
-
-
+polarisation = [np.absolute(np.exp(1j*orient).mean())]
+time = [0]
 
 
 
 def animate():
-    global orient, pos
+    global orient, pos,polarisation,time
     N = pos.shape[0]
 
     tree = cKDTree(pos,boxsize=[L,L])
@@ -57,22 +56,33 @@ def animate():
     pos[pos>L] -= L
     pos[pos<0] += L
 
+    
+    _pol = np.absolute(np.exp(1j*orient).mean())
+    if len(time)<100:
+        time.append(time[-1]+1)
+        polarisation .append(_pol)
+    else:
+        time.append(time[-1]+1)
+        polarisation .append(_pol)
+        time =time [1:]
+        polarisation = polarisation[1:]
+
     return pos[:,0], pos[:,1], orient
 
 
 
 x,y,angle= animate()
-data= {'x':x,
-'y':y,'angle':angle
-}
+data= {'x':x,'y':y,'angle':angle}
+timedata={ 'time':time,'pol':polarisation}
+
 
 
 source = models.ColumnDataSource(data)
+timesource = models.ColumnDataSource(timedata)
 
 p = plotting.figure(
     title="Vicsek model simulator",
     plot_width=600, plot_height=600,
-     # tools=["hover", "wheel_zoom"],
      x_range=(0,L),
      y_range=(0,L)
 )
@@ -88,6 +98,19 @@ p.scatter(x="x", y="y",
        
        )
 
+timeseries = plotting.figure(
+    plot_width=300, plot_height=200,
+    x_axis_label="Time",
+    y_axis_label="Polarisation",
+    y_range=(0,1)
+     # tools=["hover", "wheel_zoom"],
+     # x_range=(0,L),
+     # y_range=(0,L)
+)
+timeseries.toolbar_location = None
+
+timeseries.scatter(x="time", y="pol",
+       source=timesource,marker='circle')
 
 density_slider = Slider(start=0.1, end=3.5, value=rho_init, step=.1, title="Density")
 noise_slider = Slider(start=0.01, end=1.0, value=0.1, step=.01, title="Noise")
@@ -112,18 +135,17 @@ density_slider.on_change('value', reset)
 noise_slider.on_change('value',update_noise)
 speed_slider.on_change('value',update_speed)
 
-controls = column(density_slider,noise_slider,speed_slider,Div(text='by <a href="https://francescoturci.net" target="_blank">Francesco Turci </a>'))
+controls = column(density_slider,noise_slider,speed_slider,timeseries,Div(text='by <a href="https://francescoturci.net" target="_blank">Francesco Turci </a>'))
 
 io.curdoc().add_root(row(p,controls))
 
 
 def stream():
     x,y,angle = animate()
-    data= {'x':x,
-    'y':y,'angle':angle,
-    }
-
+    data= {'x':x,'y':y,'angle':angle}
+    timedata={ 'time':time,'pol':polarisation}
     source.data = data
+    timesource.data = timedata
 
 io.curdoc().add_periodic_callback(stream, 100)
 io.curdoc().title = "Vicsek model simulator"

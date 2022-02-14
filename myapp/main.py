@@ -82,10 +82,13 @@ timesource = models.ColumnDataSource(timedata)
 
 p = plotting.figure(
     title="Vicsek model simulator",
+    tools=["save","reset","box_zoom"],
     plot_width=600, plot_height=600,
      x_range=(0,L),
      y_range=(0,L)
+
 )
+p.toolbar.logo = None
 
 p.scatter(x="x", y="y",
        source=source,
@@ -95,15 +98,18 @@ p.scatter(x="x", y="y",
        # line_alpha="color",
        size=8,
        width=4.0,
+       syncable=False
        
        )
+
+
 
 timeseries = plotting.figure(
     plot_width=300, plot_height=200,
     x_axis_label="Time",
     y_axis_label="Polarisation",
     y_range=(0,1)
-     # tools=["hover", "wheel_zoom"],
+     ,
      # x_range=(0,L),
      # y_range=(0,L)
 )

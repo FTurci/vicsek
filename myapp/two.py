@@ -60,9 +60,9 @@ source_2 = models.ColumnDataSource({'x': pos_2[:, 0], 'y': pos_2[:, 1], 'angle':
 timesource = models.ColumnDataSource({'time': time, 'pol_1': polar_1, 'pol_2': polar_2})
 
 plot = plotting.figure(
-    title="Vicsek model simulator",
+    title="Modello di Vicsek",
     tools=["save", "reset", "box_zoom"],
-    plot_width=600, plot_height=600,
+    plot_width=650, plot_height=650,
     x_range=(0, L),
     y_range=(0, L)
 
@@ -82,7 +82,7 @@ plot.scatter(x="x", y="y",
 plot_2 = plotting.figure(
     title="Vicsek model simulator",
     tools=["save", "reset", "box_zoom"],
-    plot_width=600, plot_height=600,
+    plot_width=650, plot_height=650,
     x_range=(0, L),
     y_range=(0, L)
 )
@@ -100,18 +100,15 @@ plot_2.scatter(x="x", y="y",
 )
 
 timeseries = plotting.figure(
-    plot_width=300, plot_height=200,
-    x_axis_label="Time",
-    y_axis_label="Polarisation",
+    plot_width=400, plot_height=400,
+    x_axis_label="Tempo",
+    y_axis_label="Velocità media",
     y_range=(0, 1),
 )
 timeseries.toolbar_location = None
 # TODO: this does not work
-timeseries.scatter(x="time", y="pol_1",
-                   source=timesource, marker='circle')
-timeseries.scatter(x="time", y="pol_2",
-                   source=timesource, marker='circle', color='red')
-timeseries.show()
+timeseries.line("time", "pol_1", source=timesource, color='blue')
+timeseries.line("time", "pol_2", source=timesource, color='red')
 
 density_slider = Slider(start=0.1, end=3.5, value=rho_init, step=.1, title="Density")
 noise_slider = Slider(start=0.01, end=1.0, value=0.1, step=.01, title="Noise")
@@ -135,7 +132,7 @@ def update_speed(attr, old, new):
     v0 = speed_slider.value
 
 def stream():
-    global time, polar, source_1
+    global time, polar_1, polar_2, source_1
     animate(pos_1, orient_1, time[-1])
     animate(pos_2, orient_2, time[-1])
     time.append(time[-1] + 1)
@@ -143,7 +140,8 @@ def stream():
     polar_2.append(polarisation(orient_2))
     if time[-1] > 100:
         time = time[1:]
-        polar = polar[1:]
+        polar_1 = polar_1[1:]
+        polar_2 = polar_2[1:]
     source_1.data = {'x': pos_1[:, 0], 'y': pos_1[:, 1], 'angle': orient_1}
     source_2.data = {'x': pos_2[:, 0], 'y': pos_2[:, 1], 'angle': orient_2}
     timesource.data = {'time': time, 'pol_1': polar_1, 'pol_2': polar_2}
@@ -191,5 +189,5 @@ controls = column(button, button_clone, button_perturb, density_slider, noise_sl
 # ], sizing_mode='scale_width')
 
 io.curdoc().add_root(row(plot, plot_2, controls))
-io.curdoc().title = "Vicsek model simulator"
+io.curdoc().title = "Vicsek model"
 

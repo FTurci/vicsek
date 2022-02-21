@@ -91,7 +91,7 @@ p.scatter(x="x", y="y",
 timeseries = plotting.figure(
     plot_width=400, plot_height=400,
     x_axis_label="Tempo",
-    y_axis_label="Velocità media",
+    y_axis_label="Allineamento",
     y_range=(0, 1),
     # x_range=(0, L),
     # y_range=(0, L)
@@ -145,7 +145,7 @@ button = Button(label='► Play', width=60)
 button.on_event('button_click', run)
 
 controls = column(button, density_slider, noise_slider, speed_slider, timeseries, Div(
-    text='by <a href="https://francescoturci.net" target="_blank">Francesco Turci </a>'))
+    text='by <a href="https://francescoturci.net" target="_blank">Francesco Turci </a> and <a href="https://www.units.it/daniele.coslovich" target="_blank">Daniele Coslovich</a>'))
 
 io.curdoc().add_root(row(p, controls))
 io.curdoc().title = "Modello di Vicsek"

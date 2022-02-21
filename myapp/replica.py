@@ -62,7 +62,7 @@ timesource = models.ColumnDataSource({'time': time, 'pol_1': polar_1, 'pol_2': p
 plot = plotting.figure(
     title="Modello di Vicsek",
     tools=["save", "reset", "box_zoom"],
-    plot_width=600, plot_height=600,
+    plot_width=450, plot_height=450,
     x_range=(0, L),
     y_range=(0, L)
 
@@ -82,7 +82,7 @@ plot.scatter(x="x", y="y",
 plot_2 = plotting.figure(
     title="Replica",
     tools=["save", "reset", "box_zoom"],
-    plot_width=600, plot_height=600,
+    plot_width=450, plot_height=450,
     x_range=(0, L),
     y_range=(0, L)
 )
@@ -100,9 +100,9 @@ plot_2.scatter(x="x", y="y",
 )
 
 timeseries = plotting.figure(
-    plot_width=400, plot_height=300,
+    plot_width=300, plot_height=200,
     x_axis_label="Tempo",
-    y_axis_label="Velocità media",
+    y_axis_label="Allineamento",
     y_range=(0, 1),
 )
 timeseries.toolbar_location = None
@@ -173,7 +173,7 @@ button_clone = Button(label='Clona la replica', width=60)
 button_clone.on_event('button_click', clone)
 
 def perturb():
-    orient_1[0] += 1e-2
+    pos_2[0, 0] += 1e-1
     source_1.data = {'x': pos_1[:, 0], 'y': pos_1[:, 1], 'angle': orient_1}
     source_2.data = {'x': pos_2[:, 0], 'y': pos_2[:, 1], 'angle': orient_2}
 
@@ -181,7 +181,7 @@ button_perturb = Button(label='Perturba la replica', width=60)
 button_perturb.on_event('button_click', perturb)
 
 controls = column(button, button_clone, button_perturb, density_slider, noise_slider, speed_slider, timeseries, Div(
-    text='by <a href="https://francescoturci.net" target="_blank">Francesco Turci </a>'))
+    text='by <a href="https://francescoturci.net" target="_blank">Francesco Turci </a> and <a href="https://www.units.it/daniele.coslovich" target="_blank">Daniele Coslovich</a> '))
 
 # layout = layout([
 #     [plot],
@@ -189,5 +189,5 @@ controls = column(button, button_clone, button_perturb, density_slider, noise_sl
 # ], sizing_mode='scale_width')
 
 io.curdoc().add_root(row(plot, plot_2, controls))
-io.curdoc().title = "Vicsek model"
+io.curdoc().title = "Modello di Vicsek: repliche"
 

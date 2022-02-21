@@ -42,7 +42,7 @@ rho_init = 1.0
 eta = 0.15
 r0 = 1.0
 deltat = 1.0
-factor = 0.5
+factor = 0.25
 # TODO: speed should update r0 or factor and v0 recalculate
 v0 = r0/deltat*factor
 N = int(rho_init*L**2)
@@ -62,7 +62,7 @@ timesource = models.ColumnDataSource({'time': time, 'pol_1': polar_1, 'pol_2': p
 plot = plotting.figure(
     title="Modello di Vicsek",
     tools=["save", "reset", "box_zoom"],
-    plot_width=650, plot_height=650,
+    plot_width=600, plot_height=600,
     x_range=(0, L),
     y_range=(0, L)
 
@@ -80,9 +80,9 @@ plot.scatter(x="x", y="y",
 )
 
 plot_2 = plotting.figure(
-    title="Vicsek model simulator",
+    title="Replica",
     tools=["save", "reset", "box_zoom"],
-    plot_width=650, plot_height=650,
+    plot_width=600, plot_height=600,
     x_range=(0, L),
     y_range=(0, L)
 )
@@ -100,7 +100,7 @@ plot_2.scatter(x="x", y="y",
 )
 
 timeseries = plotting.figure(
-    plot_width=400, plot_height=400,
+    plot_width=400, plot_height=300,
     x_axis_label="Tempo",
     y_axis_label="Velocità media",
     y_range=(0, 1),
@@ -110,9 +110,9 @@ timeseries.toolbar_location = None
 timeseries.line("time", "pol_1", source=timesource, color='blue')
 timeseries.line("time", "pol_2", source=timesource, color='red')
 
-density_slider = Slider(start=0.1, end=3.5, value=rho_init, step=.1, title="Density")
-noise_slider = Slider(start=0.01, end=1.0, value=0.1, step=.01, title="Noise")
-speed_slider = Slider(start=0.02, end=5.0, value=1.0, step=.02, title="Speed")
+density_slider = Slider(start=0.1, end=3.5, value=rho_init, step=.1, title="Densità")
+noise_slider = Slider(start=0.01, end=1.0, value=0.1, step=.01, title="Rumore")
+speed_slider = Slider(start=0.02, end=5.0, value=1.0, step=.02, title="Velocità")
 
 def reset(attr, old, new):
     global orient_1, pos_1, orient_2, pos_2
@@ -169,7 +169,7 @@ def clone():
     source_1.data = {'x': pos_1[:, 0], 'y': pos_1[:, 1], 'angle': orient_1}
     source_2.data = {'x': pos_2[:, 0], 'y': pos_2[:, 1], 'angle': orient_2}
 
-button_clone = Button(label='Clone', width=60)
+button_clone = Button(label='Clona la replica', width=60)
 button_clone.on_event('button_click', clone)
 
 def perturb():
@@ -177,7 +177,7 @@ def perturb():
     source_1.data = {'x': pos_1[:, 0], 'y': pos_1[:, 1], 'angle': orient_1}
     source_2.data = {'x': pos_2[:, 0], 'y': pos_2[:, 1], 'angle': orient_2}
 
-button_perturb = Button(label='Perturb', width=60)
+button_perturb = Button(label='Perturba la replica', width=60)
 button_perturb.on_event('button_click', perturb)
 
 controls = column(button, button_clone, button_perturb, density_slider, noise_slider, speed_slider, timeseries, Div(

@@ -2,7 +2,7 @@ import numpy as np
 from scipy import sparse
 from scipy.spatial import cKDTree
 from bokeh import models, plotting, io
-from bokeh.models import LinearColorMapper, Slider, Div
+from bokeh.models import LinearColorMapper, Slider, Div, Button
 from bokeh.layouts import row, column
 from time import sleep
 from itertools import cycle
@@ -18,7 +18,7 @@ rho_init = 1.0
 eta = 0.15
 r0 = 1.0
 deltat = 1.0
-factor = 0.5
+factor = 0.25
 v0 = r0/deltat*factor
 N = int(rho_init*L**2)
 pos = np.random.uniform(0, L, size=(N, 2))
@@ -68,13 +68,14 @@ source = models.ColumnDataSource(data)
 timesource = models.ColumnDataSource(timedata)
 
 p = plotting.figure(
-    title="Vicsek model simulator",
+    title="Modello di Vicsek",
     tools=["save", "reset", "box_zoom"],
-    plot_width=600, plot_height=600,
+    plot_width=650, plot_height=650,
     x_range=(0, L),
     y_range=(0, L)
 
 )
+# p.title.text_font = '32px' 
 p.toolbar.logo = None
 p.scatter(x="x", y="y",
           source=source,
@@ -88,27 +89,28 @@ p.scatter(x="x", y="y",
 )
 
 timeseries = plotting.figure(
-    plot_width=300, plot_height=200,
-    x_axis_label="Time",
-    y_axis_label="Polarisation",
+    plot_width=400, plot_height=400,
+    x_axis_label="Tempo",
+    y_axis_label="Velocità media",
     y_range=(0, 1),
     # x_range=(0, L),
     # y_range=(0, L)
 )
 timeseries.toolbar_location = None
-timeseries.scatter(x="time", y="pol",
-                   source=timesource, marker='circle')
+timeseries.line(x="time", y="pol", source=timesource)
 
-density_slider = Slider(start=0.1, end=3.5, value=rho_init, step=.1, title="Density")
-noise_slider = Slider(start=0.01, end=1.0, value=0.1, step=.01, title="Noise")
-speed_slider = Slider(start=0.02, end=5.0, value=1.0, step=.02, title="Speed")
+density_slider = Slider(start=0.1, end=3.5, value=rho_init, step=.1, title="Densità")
+noise_slider = Slider(start=0.01, end=1.0, value=0.1, step=.01, title="Rumore")
+speed_slider = Slider(start=0.02, end=5.0, value=1.0, step=.02, title="Velocità")
 
 def reset(attr, old, new):
-    global orient, pos
+    global orient, pos, polarisation, time
     N = int(density_slider.value*L**2)
-    print(" N", N)
+    # print(" N", N)
     pos = np.random.uniform(0, L, size=(N, 2))
     orient = np.random.uniform(-np.pi, np.pi, size=N)
+    # polarisation = [np.absolute(np.exp(1j*orient).mean())]
+    # time = [0]
 
 def update_noise(attr, old, new):
     global eta
@@ -129,9 +131,21 @@ density_slider.on_change('value', reset)
 noise_slider.on_change('value', update_noise)
 speed_slider.on_change('value', update_speed)
 
-controls = column(density_slider, noise_slider, speed_slider, timeseries, Div(
+callback_id = None
+def run():
+    global callback_id
+    if button.label == '► Play':
+        button.label = '❚❚ Pause'
+        callback_id = io.curdoc().add_periodic_callback(stream, 100)
+    else:
+        button.label = '► Play'
+        io.curdoc().remove_periodic_callback(callback_id)
+
+button = Button(label='► Play', width=60)
+button.on_event('button_click', run)
+
+controls = column(button, density_slider, noise_slider, speed_slider, timeseries, Div(
     text='by <a href="https://francescoturci.net" target="_blank">Francesco Turci </a>'))
 
 io.curdoc().add_root(row(p, controls))
-io.curdoc().add_periodic_callback(stream, 100)
-io.curdoc().title = "Vicsek model simulator"
+io.curdoc().title = "Modello di Vicsek"

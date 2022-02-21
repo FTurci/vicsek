@@ -37,7 +37,7 @@ color_mapper = LinearColorMapper(palette="Turbo256", low=-np.pi, high=np.pi)
 # side of the box
 L = 32.0
 # initial density
-rho_init = 1.0
+rho_init = 0.4
 # noise
 eta = 0.15
 r0 = 1.0
@@ -102,7 +102,7 @@ plot_2.scatter(x="x", y="y",
 timeseries = plotting.figure(
     plot_width=300, plot_height=200,
     x_axis_label="Tempo",
-    y_axis_label="Allineamento",
+    y_axis_label="Allineamento globale",
     y_range=(0, 1),
 )
 timeseries.toolbar_location = None
@@ -154,7 +154,7 @@ callback_id = None
 def run():
     global callback_id
     if button.label == '► Play':
-        button.label = '❚❚ Pause'
+        button.label = '❚❚ Pausa'
         callback_id = io.curdoc().add_periodic_callback(stream, 100)
     else:
         button.label = '► Play'
@@ -180,7 +180,7 @@ def perturb():
 button_perturb = Button(label='Perturba la replica', width=60)
 button_perturb.on_event('button_click', perturb)
 
-controls = column(button, button_clone, button_perturb, density_slider, noise_slider, speed_slider, timeseries, Div(
+controls = column(button, button_perturb, density_slider, noise_slider, speed_slider, timeseries, Div(
     text='by <a href="https://francescoturci.net" target="_blank">Francesco Turci </a> and <a href="https://www.units.it/daniele.coslovich" target="_blank">Daniele Coslovich</a> '))
 
 # layout = layout([

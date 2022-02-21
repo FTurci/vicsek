@@ -13,9 +13,9 @@ color_mapper = LinearColorMapper(palette="Turbo256", low=-np.pi, high=np.pi)
 # side of the box
 L = 32.0
 # initial density
-rho_init = 1.0
+rho_init = 2.0
 # noise
-eta = 0.15
+eta = 1.0
 r0 = 1.0
 deltat = 1.0
 factor = 0.25
@@ -91,7 +91,7 @@ p.scatter(x="x", y="y",
 timeseries = plotting.figure(
     plot_width=400, plot_height=400,
     x_axis_label="Tempo",
-    y_axis_label="Allineamento",
+    y_axis_label="Allineamento globale",
     y_range=(0, 1),
     # x_range=(0, L),
     # y_range=(0, L)
@@ -100,7 +100,7 @@ timeseries.toolbar_location = None
 timeseries.line(x="time", y="pol", source=timesource)
 
 density_slider = Slider(start=0.1, end=3.5, value=rho_init, step=.1, title="Densità")
-noise_slider = Slider(start=0.01, end=1.0, value=0.1, step=.01, title="Rumore")
+noise_slider = Slider(start=0.01, end=1.0, value=1.0, step=.01, title="Rumore")
 speed_slider = Slider(start=0.02, end=5.0, value=1.0, step=.02, title="Velocità")
 
 def reset(attr, old, new):

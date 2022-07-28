@@ -68,14 +68,14 @@ source = models.ColumnDataSource(data)
 timesource = models.ColumnDataSource(timedata)
 
 p = plotting.figure(
-    title="Modello di Vicsek",
+    title="Vicsek Model",
     tools=["save", "reset", "box_zoom"],
     plot_width=650, plot_height=650,
     x_range=(0, L),
     y_range=(0, L)
 
 )
-# p.title.text_font = '32px' 
+# p.title.text_font = '32px'
 p.toolbar.logo = None
 p.scatter(x="x", y="y",
           source=source,
@@ -91,7 +91,7 @@ p.scatter(x="x", y="y",
 timeseries = plotting.figure(
     plot_width=400, plot_height=400,
     x_axis_label="Tempo",
-    y_axis_label="Allineamento globale",
+    y_axis_label="Global alignment",
     y_range=(0, 1),
     # x_range=(0, L),
     # y_range=(0, L)
@@ -99,9 +99,9 @@ timeseries = plotting.figure(
 timeseries.toolbar_location = None
 timeseries.line(x="time", y="pol", source=timesource)
 
-density_slider = Slider(start=0.1, end=3.5, value=rho_init, step=.1, title="Densità")
-noise_slider = Slider(start=0.01, end=1.0, value=1.0, step=.01, title="Rumore")
-speed_slider = Slider(start=0.02, end=5.0, value=1.0, step=.02, title="Velocità")
+density_slider = Slider(start=0.1, end=3.5, value=rho_init, step=.1, title="Density")
+noise_slider = Slider(start=0.01, end=1.0, value=1.0, step=.01, title="Noise")
+speed_slider = Slider(start=0.02, end=5.0, value=1.0, step=.02, title="Speed")
 
 def reset(attr, old, new):
     global orient, pos, polarisation, time
@@ -115,7 +115,7 @@ def reset(attr, old, new):
 def update_noise(attr, old, new):
     global eta
     eta = noise_slider.value
-    
+
 def update_speed(attr, old, new):
     global v0
     v0 = speed_slider.value
@@ -148,4 +148,4 @@ controls = column(button, density_slider, noise_slider, speed_slider, timeseries
     text='by <a href="https://francescoturci.net" target="_blank">Francesco Turci </a> and <a href="https://www.units.it/daniele.coslovich" target="_blank">Daniele Coslovich</a>'))
 
 io.curdoc().add_root(row(p, controls))
-io.curdoc().title = "Modello di Vicsek"
+io.curdoc().title = "Vicsek Model"

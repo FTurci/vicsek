@@ -90,7 +90,7 @@ p.scatter(x="x", y="y",
 
 timeseries = plotting.figure(
     plot_width=400, plot_height=400,
-    x_axis_label="Tempo",
+    x_axis_label="Time",
     y_axis_label="Global alignment",
     y_range=(0, 1),
     # x_range=(0, L),

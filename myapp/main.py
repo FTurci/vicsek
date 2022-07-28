@@ -8,7 +8,7 @@ from time import sleep
 from itertools import cycle
 
 
-color_mapper = LinearColorMapper(palette="Turbo256", low=-np.pi, high=np.pi)
+color_mapper = LinearColorMapper(palette="Turbo256", low = -np.pi, high = np.pi)
 
 # side of the box
 L = 32.0
